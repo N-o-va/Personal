@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wi-Fi Heart-Rate Logger · Justin Worachek</title>
+  <meta name="description" content="Case study: a Raspberry Pi Pico W that logs readings to Airtable, requests an AI assessment, and emails a report. Built in six versions.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="../index.html"><span class="brand-mark">JW</span>Justin Worachek</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="../index.html#work" aria-current="page">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a class="btn" href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="cs-hero">
+        <a class="back" href="../index.html#work">← All projects</a>
+        <p class="eyebrow">Case study · Spring 2026</p>
+        <h1>Wi-Fi heart-rate logger: Pico W to cloud to inbox</h1>
+        <p class="lede">A Raspberry Pi Pico W that logs heart-rate readings to a cloud database, sends every third batch to a language model for a short assessment, and emails the result. I built it up in six versions, adding one networked service at a time.</p>
+        <dl class="cs-meta">
+          <div><dt>Type</dt><dd>Embedded / IoT</dd></div>
+          <div><dt>Hardware</dt><dd>Raspberry Pi Pico W</dd></div>
+          <div><dt>Language</dt><dd>MicroPython</dd></div>
+          <div><dt>Services</dt><dd>Airtable REST API · Hugging Face inference · Gmail SMTP</dd></div>
+        </dl>
+      </section>
+
+      <figure class="cs-cover">
+        <img src="../assets/img/wifi/data-flow.svg" alt="Data-flow diagram: the Pico W posts each reading to Airtable, sends every third batch to a Hugging Face model, and emails the result through Gmail SMTP" style="padding:24px; background:var(--surface);">
+      </figure>
+
+      <div class="cs-layout">
+        <nav class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#versions">Six versions</a></li>
+            <li><a href="#code">Key code</a></li>
+            <li><a href="#lessons">What I learned</a></li>
+            <li><a href="#next">Next steps</a></li>
+          </ol>
+        </nav>
+
+        <article class="prose">
+          <section id="overview">
+            <h2>Overview</h2>
+            <!-- TODO(Justin): add why you built this, and whether it was for a class or on your own. -->
+            <p>This project is about how a microcontroller talks to internet services, built end to end rather than as an isolated demo. The Pico W reads a heart rate every 5 seconds, writes it to a cloud table, asks an AI model for a quick read on the last three values, and emails a report.</p>
+            <div class="callout"><p><strong>Scope note:</strong> the heart-rate input is simulated (a random 60–100 BPM reading) so I could build and test the networking pipeline before choosing a sensor. The AI output is a demonstration of chaining services together. It isn't medical advice.</p></div>
+          </section>
+
+          <section id="versions">
+            <h2>Six versions, one feature at a time</h2>
+            <p>Each version adds one capability on top of a version that already worked. That made every failure easy to locate.</p>
+            <div class="widget" data-stepper="versions">
+              <div class="widget-head">
+                <p>Step through the versions</p>
+                <div class="seg" role="group" aria-label="Versions">
+                  <button type="button" data-step="v1">v1</button>
+                  <button type="button" data-step="v2">v2</button>
+                  <button type="button" data-step="v3">v3</button>
+                  <button type="button" data-step="v4">v4</button>
+                  <button type="button" data-step="v5">v5</button>
+                  <button type="button" data-step="v6">v6</button>
+                </div>
+              </div>
+              <div class="panel" aria-live="polite" style="border-top:0; margin-top:0; padding-top:4px;">
+                <h4 data-panel-title></h4>
+                <div data-panel-body></div>
+                <ul class="chips" data-panel-chips></ul>
+              </div>
+              <script type="application/json" data-steps>
+{
+  "v1": {
+    "title": "v1 · Get on the network",
+    "body": "<p>Put the Pico W in station mode, join Wi-Fi, and wait up to 10 seconds (20 checks, 0.5 s apart). Then print the IP address, gateway, and DNS server. If it can't connect, it says so clearly instead of hanging.</p>",
+    "chips": ["network.WLAN", "STA mode", "connection timeout"]
+  },
+  "v2": {
+    "title": "v2 · Log to the cloud",
+    "body": "<p>Generate a simulated BPM reading every 5 seconds and <code>POST</code> it as JSON to the Airtable REST API, authenticated with a bearer token. Any non-200 response prints the status code and body, so failures are visible.</p>",
+    "chips": ["urequests", "REST POST", "JSON", "bearer auth"]
+  },
+  "v3": {
+    "title": "v3 · Add an AI health check",
+    "body": "<p>Keep a rolling window of the last three readings. Every third reading, send them to a Hugging Face–hosted chat model (Qwen3.5-9B) with a prompt asking for a 1–2 sentence assessment, and print the reply.</p>",
+    "chips": ["rolling window", "chat completions API", "prompt design"]
+  },
+  "v4": {
+    "title": "v4 · Deal with a model that thinks out loud",
+    "body": "<p>The model is a reasoning model. Its replies came back with an empty <code>content</code> field and the answer buried in a long <code>reasoning</code> field. I added a fallback to read <code>reasoning</code>, parse out the final sentences, and cap the output at 300 characters. I also raised <code>max_tokens</code> from 100 to 800 so the answer wasn't cut off mid-thought.</p>",
+    "chips": ["response parsing", "defensive fallbacks", "token limits"]
+  },
+  "v5": {
+    "title": "v5 · Email the report, the hard way",
+    "body": "<p>Send the assessment by email using raw SMTP over TLS on port 465: open a socket, wrap it in SSL, then send <code>EHLO</code>, <code>AUTH LOGIN</code> with base64-encoded credentials, <code>MAIL FROM</code>, <code>RCPT TO</code>, and <code>DATA</code> by hand.</p>",
+    "chips": ["usocket", "TLS", "SMTP protocol", "base64"]
+  },
+  "v6": {
+    "title": "v6 · Replace it with a library",
+    "body": "<p>Then I swapped my hand-written SMTP code for the <code>umail</code> library. The email function went from about 30 lines to 12, and the main loop stayed exactly the same.</p>",
+    "chips": ["umail", "refactoring", "same interface"]
+  }
+}
+              </script>
+            </div>
+          </section>
+
+          <section id="code">
+            <h2>Key code</h2>
+            <p>The main loop barely changed from v3 to v6. New features plugged in behind the same function calls:</p>
+<pre><code>bpm_history = []
+reading_count = <span class="n">0</span>
+
+<span class="k">while True</span>:
+    bpm = get_heart_rate()                <span class="c"># simulated for now</span>
+    send_to_airtable(bpm)
+
+    bpm_history.append(bpm)
+    <span class="k">if</span> len(bpm_history) &gt; HEALTH_EVERY:  <span class="c"># keep the last 3</span>
+        bpm_history.pop(<span class="n">0</span>)
+
+    reading_count += <span class="n">1</span>
+    <span class="k">if</span> reading_count % HEALTH_EVERY == <span class="n">0</span>:
+        check_health(bpm_history)         <span class="c"># AI assessment → email</span>
+
+    time.sleep(SEND_INTERVAL)            <span class="c"># 5 s</span></code></pre>
+            <p>The final email step, using <code>umail</code> (trimmed):</p>
+<pre><code><span class="k">def</span> send_gmail(subject, body):
+    smtp = umail.SMTP(<span class="s">'smtp.gmail.com'</span>, <span class="n">465</span>, ssl=<span class="k">True</span>)
+    smtp.login(GMAIL_USER, GMAIL_PASS)     <span class="c"># app password, kept out of the repo</span>
+    smtp.to(GMAIL_TO)
+    smtp.write(<span class="s">f"Subject: {subject}\n\n"</span>)
+    smtp.write(body)
+    smtp.send()
+    smtp.quit()</code></pre>
+          </section>
+
+          <section id="lessons">
+            <h2>What I learned</h2>
+            <ul>
+              <li><strong>Build in layers.</strong> Because each version worked before the next one started, every bug was in the newest few lines.</li>
+              <li><strong>Hand-rolled first, library second.</strong> The hand-written SMTP in v5 shows exactly what the library in v6 does underneath.</li>
+              <li><strong>Don't trust API response shapes.</strong> The model didn't return what the documentation implied. Defensive parsing with fallbacks kept the loop running.</li>
+              <li><strong>Secrets don't belong in source code.</strong> Every version had credentials typed straight into the scripts. They're now placeholders, and the next step is a separate secrets file that stays out of version control.</li>
+            </ul>
+          </section>
+
+          <section id="next">
+            <h2>Next steps</h2>
+            <ol>
+              <li>Replace the simulated input with a real pulse sensor (e.g. a MAX30102 over I²C).</li>
+              <li>Sync the Pico's clock over NTP so logged timestamps are real wall-clock time.</li>
+              <li>Batch the cloud writes and only email when a reading falls outside a set range, not every third reading.</li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </div>
+
+    <div class="container next">
+      <a href="cad-and-computing.html">
+        <div><p class="eyebrow">Next project</p><h3>CAD, drafting and engineering computing</h3></div>
+        <span aria-hidden="true" style="font-size:1.6rem">→</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span data-year>2026</span> Justin Worachek</span>
+      <span>Plain HTML, CSS and JavaScript.</span>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

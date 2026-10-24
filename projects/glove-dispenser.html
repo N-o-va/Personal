@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glove Dispenser · Justin Worachek</title>
+  <meta name="description" content="Case study: a touch-free, battery-powered medical glove and sanitiser dispenser built on a Raspberry Pi Pico for Cornerstone of Engineering II.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="../index.html"><span class="brand-mark">JW</span>Justin Worachek</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="../index.html#work" aria-current="page">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a class="btn" href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="cs-hero">
+        <a class="back" href="../index.html#work">← All projects</a>
+        <p class="eyebrow">Case study · Spring 2026</p>
+        <h1>Touch-free medical glove and sanitiser dispenser</h1>
+        <p class="lede">A battery-powered station that keeps gloves sealed away until a hand is detected, dispenses sanitiser, tracks how many glove boxes are left, and sounds an alarm if the hatch is left open. It runs on a Raspberry Pi Pico and was built for under £100.</p>
+        <dl class="cs-meta">
+          <div><dt>Course</dt><dd>LENGR4128 Cornerstone of Engineering II</dd></div>
+          <div><dt>Timeline</dt><dd>Jan – Apr 2026</dd></div>
+          <div><dt>Team</dt><dd>4 students</dd></div>
+          <div><dt>My role</dt><dd>Design brief lead · glove, inventory and alarm subsystems · CAD and fabrication</dd></div>
+          <div><dt>Tools</dt><dd>Inventor, Blender, PrusaSlicer, laser cutter, MicroPython</dd></div>
+        </dl>
+      </section>
+
+      <figure class="cs-cover">
+        <img src="../assets/img/glove/cover.jpg" alt="The finished dispenser on a cutting mat: clear acrylic box holding a glove box, wooden legs, a red 3D-printed sanitiser housing over a gel bottle, and a white electronics enclosure with batteries on top" data-zoom data-full="../assets/img/glove/final-prototype.jpg">
+      </figure>
+
+      <div class="cs-layout">
+        <nav class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#requirements">Requirements</a></li>
+            <li><a href="#concepts">Concepts</a></li>
+            <li><a href="#iteration-1">Iteration 1</a></li>
+            <li><a href="#pivot">The pivot</a></li>
+            <li><a href="#final">Final design</a></li>
+            <li><a href="#fabrication">Fabrication</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#reflection">Reflection</a></li>
+          </ol>
+        </nav>
+
+        <article class="prose">
+          <section id="problem">
+            <h2>The problem</h2>
+            <p>Most clinics keep disposable gloves in open, wall-mounted boxes. Every glove still in the box is exposed to droplets, coughs, and whoever reached in last. Srigley et al. (2014) found bacteria on and around gloves that were still in their boxes. The one product we found that closes the box, the AeroGlove, is designed for food-service gloves and is expensive.</p>
+            <p>Glove dispensers and sanitiser dispensers also exist only as separate products. Our proposal was a <strong>low-cost, motion-activated station that uses the gloves and sanitiser a clinic already buys</strong>, so staff never touch the box before gloving up.</p>
+          </section>
+
+          <section id="requirements">
+            <h2>Requirements</h2>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Must have</th><th>Nice to have</th></tr></thead>
+                <tbody>
+                  <tr><td>Budget ≤ £100</td><td>High hygiene effectiveness</td></tr>
+                  <tr><td>Raspberry Pi Pico controller</td><td>Easy, reliable operation</td></tr>
+                  <tr><td>Battery-powered and autonomous</td><td>Clean, professional look</td></tr>
+                  <tr><td>Dispenses gloves and/or sanitiser</td><td>Several functions in one unit</td></tr>
+                  <tr><td>No risk of physical harm; desk-sized</td><td></td></tr>
+                  <tr><td>Demonstrated by week 32</td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section id="concepts">
+            <h2>Generating and choosing concepts</h2>
+            <p>We used a morphological chart, listing options for each function (detection, glove dispensing, sanitiser delivery, structure), then scored complete concepts in a weighted decision matrix.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Function</th><th>Options considered</th></tr></thead>
+                <tbody>
+                  <tr><td>Detection</td><td>Button · IR sensor · ultrasonic sensor</td></tr>
+                  <tr><td>Glove dispensing</td><td>Manual pull · roller · servo grabber</td></tr>
+                  <tr><td>Sanitiser delivery</td><td>Pump bottle · servo press · peristaltic pump</td></tr>
+                  <tr><td>Structure</td><td>Wall-mounted · desktop · enclosed box</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>We ruled out every "touch it yourself" option (button, manual pull, pump bottle) straight away, because each one brings back the cross-contamination we were trying to remove. For the dispensing mechanism we compared a suction hose (slow, and dependent on how gloves sit in the box), a printer-style roller (needs a fixed glove orientation and grips unevenly), and a <strong>motorised pinch-and-lower bracket</strong>, which works with any glove box.</p>
+            <div class="facts">
+              <div class="fact"><strong>430</strong><span>pinch-and-lower score (of 500)</span></div>
+              <div class="fact"><strong>325–335</strong><span>the other three concepts</span></div>
+              <div class="fact"><strong>30%</strong><span>weighting on hygiene, the top criterion</span></div>
+            </div>
+            <p>The criteria were hygiene (30%), ease of use (20%), technical feasibility (20%), cost (15%), and innovation (15%). The winning concept scored 5/5 on hygiene and ease of use but only 3/5 on feasibility. That turned out to matter.</p>
+            <div class="gallery tall">
+              <figure><img src="../assets/img/glove/sketch-brainstorm.jpg" alt="Notebook page brainstorming dispensing mechanisms" loading="lazy"><figcaption>Early brainstorm of dispensing mechanisms.</figcaption></figure>
+              <figure><img src="../assets/img/glove/concept-render.jpg" alt="Inventor render of the first enclosure concept, a box with a top slot and open lower bay" loading="lazy" style="aspect-ratio:3/4; object-fit:cover;"><figcaption>First enclosure concept in Inventor (6 Mar).</figcaption></figure>
+            </div>
+          </section>
+
+          <section id="iteration-1">
+            <h2>Iteration 1: pinch-and-lower</h2>
+            <p>The plan: two servos on brackets pinch a single glove with custom ridged arms. Four DC gear motors spin 10-inch threaded poles that the brackets ride on, lowering them. When the IR sensor sees a hand, the servos pinch, the poles lower the brackets, and the servos release the glove into a tray.</p>
+            <figure>
+              <img src="../assets/img/glove/render-pinch-mechanism.jpg" alt="Blender render of the pinch-and-lower mechanism: four threaded poles and two servo brackets" loading="lazy" data-zoom>
+              <figcaption>Blender render of the pinch-and-lower mechanism.</figcaption>
+            </figure>
+            <div class="gallery">
+              <figure><img src="../assets/img/glove/render-pinch-arm.jpg" alt="Render of the custom servo arm with a ridged grip" loading="lazy"><figcaption>Custom servo arm with a ridged grip for pinching nitrile.</figcaption></figure>
+              <figure><img src="../assets/img/glove/iteration1-prototype.jpg" alt="First prototype: four yellow gear motors driving printed threaded poles with two servo brackets" loading="lazy"><figcaption>The physical prototype: four motors, printed poles, two servo brackets.</figcaption></figure>
+            </div>
+            <div class="video-row" style="grid-template-columns:minmax(0,280px);">
+              <figure>
+                <video src="../assets/video/glove-servo-pinch.mp4" poster="../assets/img/glove/servo-pinch-poster.jpg" controls muted playsinline preload="none"></video>
+                <figcaption>Servo pinch test, triggered by the IR sensor.</figcaption>
+              </figure>
+            </div>
+            <p>Most of my time went into the threaded poles. I printed and tested <strong>24 versions</strong> between 12 and 27 March: single-piece poles, separate male and female sections, and paired sets designed to join. I also went through 5 servo arms and 5 servo mounts.</p>
+          </section>
+
+          <section id="pivot">
+            <h2>Why I scrapped it</h2>
+            <ul class="steps">
+              <li class="fail"><h3>The printer couldn't print the part</h3><p>The rods needed to be 10 inches long. Our printer couldn't print threaded rods longer than about 7 inches, so later versions split each pole into male and female sections.</p></li>
+              <li class="fail"><h3>The threads came out rough</h3><p>Print supports couldn't be fully removed from the threads, so the brackets bound instead of riding smoothly.</p></li>
+              <li class="fail"><h3>The motors weren't strong enough</h3><p>Even when a pole turned, the small gear motors couldn't reliably lift the brackets against that friction.</p></li>
+              <li class="win"><h3>Back to brainstorming</h3><p>After more than 50 hours, I accepted that the mechanism was too ambitious and was getting in the way of the actual goal. We kept the enclosure idea, dropped the moving bracket, and focused on <em>protecting</em> the gloves instead of handing them out one at a time.</p></li>
+            </ul>
+            <div class="callout quote"><p>The lesson I took: test mechanical feasibility <em>before</em> sinking serious time into a design.</p></div>
+          </section>
+
+          <section id="final">
+            <h2>Final design: four functions, fewer moving parts</h2>
+            <p>The redesign is a laser-cut acrylic enclosure (9 × 4.5 × 10 in) that holds up to three glove boxes. Boxes load from the top and an empty one comes out through a side door. A 3D-printed housing on top holds the Pico, breadboard, LCD, and batteries.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Function</th><th>How it works</th><th>Owner</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Glove hatch</strong></td><td>An IR sensor under the box opens a servo-driven hatch to give access to the gloves. A second trigger closes it.</td><td>Me</td></tr>
+                  <tr><td><strong>Inventory tracking</strong></td><td>An HC-SR04 in the lid measures the stack height. A 16×2 I²C LCD shows how many boxes are left.</td><td>Me (integration)</td></tr>
+                  <tr><td><strong>Open-hatch alarm</strong></td><td>The hatch never shuts on its own, so users have as long as they need. After 7 seconds open, a buzzer sounds and the LCD shows "Close Hatch!".</td><td>Me</td></tr>
+                  <tr><td><strong>Sanitiser</strong></td><td>An IR sensor under the bottle head triggers a gear motor driving a printed rack and pinion that presses the pump.</td><td>Teammate (I helped with wiring and code)</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="gallery">
+              <figure><img src="../assets/img/glove/hatch-underside.jpg" alt="View from below: the black servo hatch under a box of nitrile gloves and the IR sensor housing" loading="lazy"><figcaption>The servo hatch and IR sensor housing, seen from below.</figcaption></figure>
+              <figure><img src="../assets/img/glove/lcd-one-box-left.jpg" alt="LCD reading 1 box left, Dist 17.3 cm" loading="lazy"><figcaption>Inventory readout: "1 box left".</figcaption></figure>
+              <figure><img src="../assets/img/glove/sanitiser-rack.jpg" alt="Close-up of the sanitiser mechanism: gear motor, printed spur gear and rack pressing the pump" loading="lazy"><figcaption>Rack-and-pinion sanitiser pump (teammate's subsystem).</figcaption></figure>
+              <figure><img src="../assets/img/glove/sketch-redesign-1.jpg" alt="Dimensioned notebook sketch for the laser-cut enclosure" loading="lazy"><figcaption>Dimensioned sketches for the laser-cut redesign.</figcaption></figure>
+            </div>
+            <figure>
+              <video src="../assets/video/glove-inventory-lcd.mp4" poster="../assets/img/glove/inventory-lcd-poster.jpg" controls muted playsinline preload="none"></video>
+              <figcaption>Inventory tracking demo: the LCD updates as glove boxes are removed.</figcaption>
+            </figure>
+            <p>The alarm wasn't in the original plan. A fourth subsystem, a self-cleaning tray, wasn't finished in time, so I built the open-hatch alarm in its place. A fourth function that worked beat a fourth one that didn't.</p>
+          </section>
+
+          <section id="fabrication">
+            <h2>Fabrication</h2>
+            <p>I modelled every part I was responsible for in Autodesk Inventor, exported STLs for printing, and used Inventor's sheet tools to produce DXFs for the laser cutter. Prints ran on a Prusa CORE One (PLA, 0.4 mm nozzle, 0.2 mm layers, 30% infill).</p>
+            <div class="facts">
+              <div class="fact"><strong>52</strong><span>STL files exported</span></div>
+              <div class="fact"><strong>28</strong><span>Inventor part models</span></div>
+              <div class="fact"><strong>14</strong><span>laser-cut DXF panels</span></div>
+              <div class="fact"><strong>2</strong><span>enclosure iterations</span></div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Print</th><th>Time</th><th>Filament</th></tr></thead>
+                <tbody>
+                  <tr><td>Thread test coupon</td><td>9 min</td><td>1.4 g</td></tr>
+                  <tr><td>Threaded pole v5</td><td>48 min</td><td>5.4 g</td></tr>
+                  <tr><td>Servo mount v3</td><td>55 min</td><td>23 g</td></tr>
+                  <tr><td>Four joined pole sets (v8)</td><td>2 h 48 min</td><td>33 g</td></tr>
+                  <tr><td>Electronics box top v1</td><td>2 h 34 min</td><td>103 g</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Print times were a real schedule constraint, and our team retrospective named them as one of the things that slowed us down. Short test prints, like the 9-minute thread coupon, let me check a fit before committing hours to a full part.</p>
+          </section>
+
+          <section id="results">
+            <h2>Results</h2>
+            <ul>
+              <li>All of the final functions ran together on battery power in the finished prototype.</li>
+              <li>The glove hatch, inventory display, and open-hatch alarm all worked as designed.</li>
+              <li>Purchased consumables (gloves and sanitiser gel) came to £12.87. Electronics and stock came from the lab, well within the £100 cap.</li>
+              <li>The final design protects the gloves rather than dispensing them one at a time. That was a deliberate trade-off for reliability.</li>
+            </ul>
+          </section>
+
+          <section id="reflection">
+            <h2>Reflection</h2>
+            <p><strong>What I'd do differently.</strong> I'd test the riskiest mechanism first, with the cheapest possible prototype, before designing everything around it. I'd also learn more about material and process limits up front: how long a part can be printed, and how supports behave on threads.</p>
+            <p><strong>What I'd improve next.</strong> A moulded enclosure with proper hinges; a solenoid or linear actuator instead of the servo, for a better hatch seal; a single Pico instead of two; and a smaller footprint. Before any real clinical use, it would also need validation and a fail-safe way to reach the gloves.</p>
+            <p><strong>Ethics.</strong> The report included an ethics analysis using consequentialist, deontological, and virtue-ethics lenses. The conclusion was that the device should be presented as a hygiene <em>aid</em> that supports good practice, not a replacement for it.</p>
+          </section>
+        </article>
+      </div>
+    </div>
+
+    <div class="container next">
+      <a href="maze-robot.html">
+        <div><p class="eyebrow">Next project</p><h3>Autonomous maze-navigating robot</h3></div>
+        <span aria-hidden="true" style="font-size:1.6rem">→</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span data-year>2026</span> Justin Worachek</span>
+      <span>Plain HTML, CSS and JavaScript.</span>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

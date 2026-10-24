@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Semi Tracker · Justin Worachek</title>
+  <meta name="description" content="Case study: Semi Tracker, a single-page semiconductor market dashboard built with plain JavaScript and a PowerShell data proxy.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="../index.html"><span class="brand-mark">JW</span>Justin Worachek</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="../index.html#work" aria-current="page">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a class="btn" href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="cs-hero">
+        <a class="back" href="../index.html#work">← All projects</a>
+        <p class="eyebrow">Case study · Summer 2026</p>
+        <h1>Semi Tracker: a semiconductor market dashboard</h1>
+        <p class="lede">A single-page dashboard that follows 16 semiconductor companies, with prices, daily change, three-month sparklines, sector filters, and a composite Fear &amp; Greed index. It's plain JavaScript with hand-built SVG charts and no frameworks.</p>
+        <dl class="cs-meta">
+          <div><dt>Type</dt><dd>Personal project</dd></div>
+          <div><dt>Built</dt><dd>June 2026</dd></div>
+          <div><dt>Team</dt><dd>Solo, AI-assisted</dd></div>
+          <div><dt>Stack</dt><dd>HTML · CSS · JavaScript · PowerShell · Yahoo Finance v8 API · GitHub Pages</dd></div>
+        </dl>
+        <div class="cs-links">
+          <a class="btn" href="https://github.com/N-o-va/Finance/tree/Semiconductor-tracker" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+            View code on GitHub
+          </a>
+        </div>
+      </section>
+
+      <figure class="cs-cover">
+        <img src="../assets/img/semi/dashboard-overview.jpg" alt="Semi Tracker dashboard: summary tiles for market cap, advancing and declining counts, a sentiment bar, and a Fear and Greed gauge with five contributing factors" data-zoom>
+        <figcaption>Running locally with live Yahoo Finance data, 8 October 2026.</figcaption>
+      </figure>
+
+      <div class="cs-layout">
+        <nav class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#bug">The +165% bug</a></li>
+            <li><a href="#limits">Limitations</a></li>
+            <li><a href="#next">Next steps</a></li>
+          </ol>
+        </nav>
+
+        <article class="prose">
+          <section id="overview">
+            <h2>Overview</h2>
+            <p>The goal was one page that answers "how is the chip sector doing today?" at a glance. It's the first in a planned set of industry trackers.</p>
+            <p>It tracks 16 companies across the supply chain: <code>NVDA</code> <code>TSM</code> <code>AVGO</code> <code>AMD</code> <code>QCOM</code> <code>ASML</code> <code>AMAT</code> <code>TXN</code> <code>MU</code> <code>LRCX</code> <code>KLAC</code> <code>INTC</code> <code>ADI</code> <code>MRVL</code> <code>NXPI</code> <code>ON</code>. You can filter them by segment: equipment, analog, memory, and foundry.</p>
+            <!-- TODO(Justin): replace the first paragraph with your own reason for building this if it differs. -->
+          </section>
+
+          <section id="architecture">
+            <h2>Architecture</h2>
+            <p>Browsers can't call Yahoo Finance directly. The API needs a session cookie and a "crumb" token, and it doesn't send CORS headers. So the page picks a route based on where it's running:</p>
+            <div class="widget fsm static">
+              <svg viewBox="0 0 730 260" role="img" aria-labelledby="arch-t arch-d">
+                <title id="arch-t">Semi Tracker data flow</title>
+                <desc id="arch-d">On localhost the browser calls a PowerShell proxy, serve.ps1, which handles authentication and fetches all 16 tickers in one batch from the Yahoo Finance v8 chart API. On GitHub Pages the browser calls the API through corsproxy.io with one request per ticker.</desc>
+                <defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
+                <g class="node hl"><rect x="10" y="95" width="170" height="70" rx="10"/><text x="95" y="124" text-anchor="middle">BROWSER</text><text x="95" y="145" text-anchor="middle" class="sub">index.html · IS_LOCAL?</text></g>
+                <g class="node"><rect x="280" y="18" width="190" height="70" rx="10"/><text x="375" y="47" text-anchor="middle">serve.ps1</text><text x="375" y="68" text-anchor="middle" class="sub">auth + 1 batch call</text></g>
+                <g class="node"><rect x="280" y="172" width="190" height="70" rx="10"/><text x="375" y="201" text-anchor="middle">corsproxy.io</text><text x="375" y="222" text-anchor="middle" class="sub">16 parallel calls</text></g>
+                <g class="node"><rect x="560" y="95" width="160" height="70" rx="10"/><text x="640" y="124" text-anchor="middle">YAHOO v8</text><text x="640" y="145" text-anchor="middle" class="sub">chart API</text></g>
+                <path class="edge" d="M180 115 C232 115 228 53 272 53" marker-end="url(#arr2)"/>
+                <path class="edge" d="M180 145 C232 145 228 207 272 207" marker-end="url(#arr2)"/>
+                <path class="edge" d="M470 53 C522 53 512 115 552 115" marker-end="url(#arr2)"/>
+                <path class="edge" d="M470 207 C522 207 512 145 552 145" marker-end="url(#arr2)"/>
+                <text class="edge-label" x="196" y="76">localhost</text>
+                <text class="edge-label" x="190" y="196">GitHub Pages</text>
+              </svg>
+            </div>
+            <ul>
+              <li><strong>Local:</strong> a small PowerShell <code>HttpListener</code> server (<code>serve.ps1</code>) serves the page, gets the cookie and crumb, and returns all 16 tickers from a single <code>/api/finance</code> request.</li>
+              <li><strong>Hosted:</strong> on GitHub Pages there's no server, so the page sends one request per ticker through a public CORS proxy.</li>
+              <li><strong>Refresh:</strong> on load the page fetches 3-month history for the sparklines, then a 1-day range for accurate daily change. During US market hours (9:30–16:00 ET) it refreshes every 60 seconds.</li>
+            </ul>
+          </section>
+
+          <section id="features">
+            <h2>Features</h2>
+            <ul>
+              <li>Summary tiles: total market cap, advancing vs declining, average daily change, a sentiment bar</li>
+              <li>Company cards: price, change, 3-month sparkline, market cap, P/E, employees, previous close</li>
+              <li>Top movers, sector performance grid, and a generated daily summary</li>
+              <li>Failure states: a "Data unavailable · HH:MM" indicator and per-card error styling when a ticker fails</li>
+            </ul>
+            <h3>The Fear &amp; Greed index</h3>
+            <p>Instead of borrowing someone else's sentiment number, the dashboard computes its own from five weighted factors across the 16 tracked stocks:</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Factor</th><th>What it measures</th><th>Weight</th></tr></thead>
+                <tbody>
+                  <tr><td>Price momentum</td><td>% of stocks above their 20-day moving average</td><td>25%</td></tr>
+                  <tr><td>Market breadth</td><td>% of stocks advancing today</td><td>25%</td></tr>
+                  <tr><td>Volatility</td><td>Inverse of the average daily move</td><td>20%</td></tr>
+                  <tr><td>Momentum strength</td><td>RSI-style ratio of up days</td><td>15%</td></tr>
+                  <tr><td>Sector breadth</td><td>% of sectors positive</td><td>15%</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <figure>
+              <img src="../assets/img/semi/company-cards.jpg" alt="Grid of company cards, each with ticker, price, change, sparkline, and key statistics" loading="lazy" data-zoom>
+              <figcaption>Company cards with sector filters and 3-month sparklines (live data).</figcaption>
+            </figure>
+          </section>
+
+          <section id="bug">
+            <h2>The bug: AMD up 165% in a day</h2>
+            <p>Once live data was flowing, the dashboard reported AMD at <strong>+165%</strong> for the day. At first that looked like a real (if wild) market move. It wasn't. The 3-month request reports change relative to the <em>start of the 3-month window</em>, not the previous close.</p>
+            <p>The fix was a second, 1-day request after the 3-month one, used only to correct the daily change figures. AMD dropped to a believable <strong>+1.33%</strong>.</p>
+            <div class="callout"><p>The lesson: sanity-check data before you accept it. A number that would be front-page news is more likely a bug than news.</p></div>
+            <p>With the fix in place, the local build was verified against real data: an average daily change of +1.54%, with 10 tickers up and 6 down.</p>
+          </section>
+
+          <section id="limits">
+            <h2>Known limitations</h2>
+            <ul>
+              <li><strong>Unofficial data source.</strong> The Yahoo v8 endpoint is undocumented, can rate-limit, and isn't licensed for redistribution. It's fine for a personal tool, but not for a product.</li>
+              <li><strong>Third-party proxy.</strong> The hosted build depends on a free public CORS proxy, its most likely point of failure.</li>
+              <li><strong>Sample content.</strong> The news and outlook panels use placeholder content, not a live feed, and the offline fallback simulates prices when data can't be fetched.</li>
+              <li><strong>Slow local start.</strong> Local loading takes 30–60 seconds because requests run one after another.</li>
+            </ul>
+          </section>
+
+          <section id="next">
+            <h2>Next steps</h2>
+            <ol>
+              <li>Replace the public proxy with a Cloudflare Worker I control.</li>
+              <li>Run local fetches in parallel.</li>
+              <li>Clearly label simulated data, or stop simulating when the live fetch fails.</li>
+              <li>Swap the sample news panel for a real news API, or remove it.</li>
+              <li>Write a README covering the architecture and the data-source caveats.</li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </div>
+
+    <div class="container next">
+      <a href="wifi-heart-rate-logger.html">
+        <div><p class="eyebrow">Next project</p><h3>Wi-Fi heart-rate logger</h3></div>
+        <span aria-hidden="true" style="font-size:1.6rem">→</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span data-year>2026</span> Justin Worachek</span>
+      <span>Plain HTML, CSS and JavaScript.</span>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
