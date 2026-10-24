@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Justin Worachek · Engineering Portfolio</title>
+  <meta name="description" content="Engineering portfolio of Justin Worachek, Northeastern University. Embedded systems, mechanical prototyping, CAD, and software projects from a first year at Northeastern University London.">
+  <meta property="og:title" content="Justin Worachek · Engineering Portfolio">
+  <meta property="og:description" content="Embedded systems, mechanical prototyping, CAD, and software projects.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <a class="sr-only" href="#work">Skip to projects</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="index.html"><span class="brand-mark">JW</span>Justin Worachek</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="#work">Work</a>
+        <a href="#skills">Skills</a>
+        <a href="#about">About</a>
+        <a class="btn" href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero">
+      <div class="container">
+        <p class="eyebrow">Engineering portfolio · 2025–26</p>
+        <h1>I build things that sense, decide, and move.</h1>
+        <!-- TODO(Justin): confirm major. "Electrical and Computer Engineering" comes from a Sept 2025 class file. -->
+        <p class="lede">I'm an Electrical and Computer Engineering student at Northeastern University. I spent my first year at the London campus building robots, medical-device prototypes, and data tools, usually by getting it wrong first and iterating until it worked.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#work">See my projects</a>
+          <a class="btn" href="#contact">Get in touch</a>
+        </div>
+        <dl class="hero-facts">
+          <div><dt>Studying</dt><dd>ECE · Northeastern University</dd></div>
+          <div><dt>Based</dt><dd>London, UK (2025–26)</dd></div>
+          <div><dt>Focus</dt><dd>Embedded systems · CAD · Prototyping</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <!-- Selected work -->
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Selected work</p>
+            <h2>Projects</h2>
+          </div>
+          <p>Each project page is a short case study: the problem, the constraints, what failed, and what finally worked.</p>
+        </div>
+
+        <div style="display:grid; gap:20px;">
+          <a class="featured" href="projects/glove-dispenser.html">
+            <div class="featured-media">
+              <img src="assets/img/glove/cover.jpg" alt="Finished glove and sanitiser dispenser prototype: clear acrylic housing holding a glove box, red 3D-printed sanitiser unit, and a white electronics enclosure on top" loading="lazy">
+            </div>
+            <div class="featured-body">
+              <p class="card-meta">Spring 2026 · Cornerstone of Engineering II · Team of 4</p>
+              <h3>Touch-free medical glove and sanitiser dispenser</h3>
+              <p>A battery-powered station that keeps gloves sealed until a hand is detected, tracks how many glove boxes are left, and sounds an alarm if the hatch is left open. I scrapped the first mechanism after 50+ hours and redesigned it.</p>
+              <div class="featured-stats">
+                <div><strong>2</strong><span>full design iterations</span></div>
+                <div><strong>24</strong><span>threaded-pole prototypes</span></div>
+                <div><strong>&lt;£100</strong><span>total budget</span></div>
+              </div>
+              <ul class="chips" aria-label="Tools">
+                <li><span class="chip">Raspberry Pi Pico</span></li>
+                <li><span class="chip">Autodesk Inventor</span></li>
+                <li><span class="chip">3D printing</span></li>
+                <li><span class="chip">Laser cutting</span></li>
+              </ul>
+              <span class="link-arrow">Read the case study →</span>
+            </div>
+          </a>
+
+          <a class="featured" href="projects/maze-robot.html">
+            <div class="featured-media">
+              <img src="assets/img/robot/robot-cover.jpg" alt="Two-wheeled robot on an acrylic chassis with a Raspberry Pi Pico on a breadboard, an L298N motor driver, and two ultrasonic sensors" loading="lazy">
+            </div>
+            <div class="featured-body">
+              <p class="card-meta">Fall 2025 · Cornerstone of Engineering I · Team of 2</p>
+              <h3>Autonomous maze-navigating robot</h3>
+              <p>A two-motor robot that had to drive straight, run a timed course, and then find its way through a maze using only two ultrasonic sensors. I wrote all of the code. My first approach failed completely, and a simpler rewrite finished the maze the next day.</p>
+              <div class="featured-stats">
+                <div><strong>4/4</strong><span>tasks completed</span></div>
+                <div><strong>2</strong><span>ultrasonic sensors</span></div>
+                <div><strong>0</strong><span>wall contacts on final run</span></div>
+              </div>
+              <ul class="chips" aria-label="Tools">
+                <li><span class="chip">MicroPython</span></li>
+                <li><span class="chip">PWM motor control</span></li>
+                <li><span class="chip">HC-SR04</span></li>
+                <li><span class="chip">AutoCAD</span></li>
+              </ul>
+              <span class="link-arrow">Read the case study →</span>
+            </div>
+          </a>
+        </div>
+
+        <div class="grid" style="margin-top:20px;">
+          <a class="card" href="projects/semi-tracker.html">
+            <div class="card-media"><img src="assets/img/semi/card-thumb.jpg" alt="Semi Tracker dashboard header with market summary tiles and a sentiment bar" loading="lazy" style="object-position:left top;"></div>
+            <div class="card-body">
+              <p class="card-meta">Summer 2026 · Personal project</p>
+              <h3>Semi Tracker</h3>
+              <p>A dashboard that follows 16 semiconductor companies, with live prices, sparklines, and a five-factor Fear &amp; Greed index. Plain JavaScript and a small PowerShell proxy.</p>
+              <ul class="chips"><li><span class="chip">JavaScript</span></li><li><span class="chip">REST APIs</span></li><li><span class="chip">SVG charts</span></li></ul>
+            </div>
+          </a>
+
+          <a class="card" href="projects/wifi-heart-rate-logger.html">
+            <div class="card-media"><img src="assets/img/wifi/data-flow.svg" alt="Diagram: Pico W sends readings to Airtable, a Hugging Face language model, and Gmail" loading="lazy"></div>
+            <div class="card-body">
+              <p class="card-meta">Spring 2026 · Embedded / IoT</p>
+              <h3>Wi-Fi heart-rate logger</h3>
+              <p>A Pico W that logs readings to a cloud database, asks a language model for a quick assessment, and emails a report. Built up in six versions, one feature at a time.</p>
+              <ul class="chips"><li><span class="chip">Pico W</span></li><li><span class="chip">MicroPython</span></li><li><span class="chip">SMTP</span></li></ul>
+            </div>
+          </a>
+
+          <a class="card" href="projects/cad-and-computing.html">
+            <div class="card-media"><img src="assets/img/cad/sw2-cover.jpg" alt="SolidWorks multi-view engineering drawing of a support bracket with dimensions" loading="lazy" style="object-fit:contain; background:#fff;"></div>
+            <div class="card-body">
+              <p class="card-meta">2025–26 · Coursework</p>
+              <h3>CAD, drafting and engineering computing</h3>
+              <p>SolidWorks parts and drawings, AutoCAD and Inventor work, a Blender render, and MATLAB and Python analysis from both Cornerstone courses.</p>
+              <ul class="chips"><li><span class="chip">SolidWorks</span></li><li><span class="chip">MATLAB</span></li><li><span class="chip">Blender</span></li></ul>
+            </div>
+          </a>
+
+          <a class="card" href="projects/nexus.html">
+            <div class="card-media"><img src="assets/img/nexus/landing.jpg" alt="Nexus landing page reading Connect with the Quantum Ecosystem" loading="lazy"></div>
+            <div class="card-body">
+              <p class="card-meta">Spring 2026 · Prototype · Archived</p>
+              <h3>Nexus talent platform</h3>
+              <p>A prototype hiring platform for the quantum-computing industry, with onboarding, an admin review queue, and a candidate dashboard.</p>
+              <ul class="chips"><li><span class="chip">Product design</span></li><li><span class="chip">Lovable</span></li></ul>
+            </div>
+          </a>
+
+          <div class="card building">
+            <div class="card-media">
+              <svg width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="color:var(--text-3)">
+                <rect x="14" y="14" width="68" height="68" rx="6"/>
+                <rect x="36" y="36" width="24" height="24" rx="2"/>
+                <path d="M42 36V22M54 36V22M42 74V60M54 74V60M36 42H22M36 54H22M74 42H60M74 54H60"/>
+                <circle cx="22" cy="22" r="3"/><circle cx="74" cy="74" r="3"/>
+              </svg>
+            </div>
+            <div class="card-body">
+              <p class="card-meta"><span class="badge warn"><span class="dot"></span>In progress</span></p>
+              <h3>First custom PCB</h3>
+              <p>I'm learning KiCad 10 to design my first printed circuit board. It builds on a Cornerstone research summary I co-wrote on automated PCB manufacturing and testing.</p>
+              <ul class="chips"><li><span class="chip">KiCad</span></li><li><span class="chip">Schematic capture</span></li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">The London year</p>
+            <h2>How the work built up</h2>
+          </div>
+          <p>Each project reused something from the one before: motor control, then sensors, then cloud services, then full mechanical design.</p>
+        </div>
+        <ol class="timeline">
+          <li><time>Nov–Dec 2025</time><strong>Maze robot</strong><span>PWM, sensors, control logic</span></li>
+          <li><time>Jan–Apr 2026</time><strong>Glove dispenser</strong><span>CAD, fabrication, integration</span></li>
+          <li><time>Spring 2026</time><strong>Wi-Fi logger · Nexus</strong><span>Networking, APIs, product</span></li>
+          <li><time>Summer 2026</time><strong>Semi Tracker</strong><span>Data, web, visualisation</span></li>
+          <li class="future"><time>Next</time><strong>Custom PCB</strong><span>Circuit and board design</span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section class="section" id="skills">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Toolbox</p>
+            <h2>Skills, with proof</h2>
+          </div>
+          <p>Everything listed here is used in at least one project on this page.</p>
+        </div>
+        <div class="skills">
+          <div class="skill-group">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M9 1v4M15 1v4M9 19v4M15 19v4M1 9h4M1 15h4M19 9h4M19 15h4"/></svg>Embedded and electronics</h3>
+            <p>Microcontroller firmware, motor drivers, and sensors.</p>
+            <ul class="chips">
+              <li><span class="chip">MicroPython</span></li><li><span class="chip">Raspberry Pi Pico / Pico W</span></li>
+              <li><span class="chip">PWM</span></li><li><span class="chip">H-bridge (L298N)</span></li>
+              <li><span class="chip">Ultrasonic + IR sensing</span></li><li><span class="chip">Servos</span></li>
+              <li><span class="chip">I²C LCD</span></li><li><span class="chip">KiCad (learning)</span></li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>CAD and fabrication</h3>
+            <p>From sketch to printed or laser-cut part.</p>
+            <ul class="chips">
+              <li><span class="chip">Autodesk Inventor</span></li><li><span class="chip">SolidWorks</span></li>
+              <li><span class="chip">AutoCAD</span></li><li><span class="chip">Blender</span></li>
+              <li><span class="chip">FDM printing (PrusaSlicer)</span></li><li><span class="chip">Laser cutting</span></li>
+              <li><span class="chip">Technical drawing</span></li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>Software and data</h3>
+            <p>Scripts, analysis, and small web tools.</p>
+            <ul class="chips">
+              <li><span class="chip">Python</span></li><li><span class="chip">MATLAB</span></li>
+              <li><span class="chip">JavaScript / HTML / CSS</span></li><li><span class="chip">REST APIs</span></li>
+              <li><span class="chip">PowerShell</span></li><li><span class="chip">Git + GitHub</span></li>
+            </ul>
+          </div>
+          <div class="skill-group">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Design process</h3>
+            <p>How I get from a vague brief to a working prototype.</p>
+            <ul class="chips">
+              <li><span class="chip">Morphological charts</span></li><li><span class="chip">Weighted decision matrices</span></li>
+              <li><span class="chip">Rapid iteration</span></li><li><span class="chip">Technical writing</span></li>
+              <li><span class="chip">Engineering ethics</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About + contact -->
+    <section class="section" id="about">
+      <div class="container about">
+        <div>
+          <p class="eyebrow">About</p>
+          <h2>Hi, I'm Justin.</h2>
+          <!-- TODO(Justin): this is a factual first draft. Rewrite it in your own voice: what you enjoy, what you're looking for (co-op, internship), and where you're headed after London. -->
+          <p class="muted">I spent my first year of engineering at Northeastern's London campus. The Cornerstone courses there put me in the makerspace early: a maze-solving robot in the first semester and a medical-device prototype in the second, with web and IoT projects on the side.</p>
+          <p class="muted">Most of my work sits where hardware meets software: motor control, sensors, and the code that ties them together. Next up, I'm designing my first PCB.</p>
+        </div>
+        <div id="contact">
+          <p class="eyebrow">Contact</p>
+          <!-- TODO(Justin): replace the email, LinkedIn, and resume placeholders below. -->
+          <ul class="contact-list">
+            <li><a href="mailto:your.email@example.com">Email <span>your.email@example.com</span></a></li>
+            <li><a href="https://www.linkedin.com/in/your-profile" rel="noopener">LinkedIn <span>linkedin.com/in/your-profile</span></a></li>
+            <li><a href="https://github.com/N-o-va" rel="noopener">GitHub <span>github.com/N-o-va</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span data-year>2026</span> Justin Worachek</span>
+      <span>Plain HTML, CSS and JavaScript.</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
