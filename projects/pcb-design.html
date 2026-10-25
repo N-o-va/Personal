@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PCB Design · Justin Worachek</title>
+  <meta name="description" content="In progress: learning PCB design in Altium Designer, starting with an LED board built from a tutorial, plus a nanosatellite power-system learning exercise.">
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="../index.html"><span class="brand-mark">JW</span>Justin Worachek</a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="../index.html#work" aria-current="page">Work</a>
+        <a href="../index.html#skills">Skills</a>
+        <a href="../index.html#about">About</a>
+        <a class="btn" href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <section class="cs-hero">
+        <a class="back" href="../index.html#work">← All projects</a>
+        <p class="eyebrow">In progress · Fall 2026 · <span class="badge warn"><span class="dot"></span>Schematic done, layout next</span></p>
+        <h1>Learning PCB design in Altium Designer</h1>
+        <p class="lede">My first printed circuit board: a small LED board built by following a tutorial, chosen so I could learn the whole Altium workflow on a circuit simple enough to get right. Alongside it, I'm working through a learning exercise on the power system of a nanosatellite.</p>
+        <dl class="cs-meta">
+          <div><dt>Tool</dt><dd>Altium Designer</dd></div>
+          <div><dt>Started</dt><dd>October 2026</dd></div>
+          <div><dt>First board</dt><dd>3.3 V LED indicator</dd></div>
+          <div><dt>Status</dt><dd>Schematic and libraries complete</dd></div>
+        </dl>
+      </section>
+
+      <div class="cs-layout">
+        <nav class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#why">Why PCBs</a></li>
+            <li><a href="#led-board">The LED board</a></li>
+            <li><a href="#workflow">What I learned</a></li>
+            <li><a href="#eps">Nanosatellite EPS</a></li>
+            <li><a href="#next">What's next</a></li>
+          </ol>
+        </nav>
+
+        <article class="prose">
+          <section id="why">
+            <h2>Why PCBs</h2>
+            <p>Every project on this site so far ran on breadboards and jumper wires. Designing my own boards is the next step toward hardware that's compact and reliable. It also follows on from a Cornerstone research summary I co-wrote on automated PCB manufacturing and testing.</p>
+            <p>I first set up a project in KiCad, then moved to Altium Designer, an industry-standard tool for professional board design.</p>
+          </section>
+
+          <section id="led-board">
+            <h2>The LED board</h2>
+            <p>The circuit is deliberately simple: a 3.3 V supply feeds a 360 Ω current-limiting resistor and a green LED to ground, with a two-pin header to bring power onto the board. The resistor keeps the LED current to a few milliamps, well within its rating.</p>
+            <figure style="max-width:340px;">
+              <img src="../assets/img/pcb/led-schematic.jpg" alt="Altium schematic: +3V3 through a 360 ohm resistor to a green LED and ground, with a 1x2 header" data-zoom style="background:#fff;">
+              <figcaption>The LED board schematic in Altium Designer.</figcaption>
+            </figure>
+            <p>Because the circuit is trivial, all the effort went into learning how a real board gets made, step by step.</p>
+          </section>
+
+          <section id="workflow">
+            <h2>What I learned building it</h2>
+            <ul class="steps">
+              <li class="win"><h3>Custom schematic library</h3><p>I drew my own LED schematic symbol and stored it in a project schematic library, instead of relying only on built-in parts.</p></li>
+              <li class="win"><h3>Custom footprint library</h3><p>I built a PCB footprint library, including an 0805 surface-mount footprint, which defines the copper pads the part solders to.</p></li>
+              <li class="win"><h3>Importing a real manufacturer part</h3><p>For the resistor I imported an actual orderable part, a Yageo AC0805FR-07360RL (360 Ω, 1%, 0805), from SnapEDA as an integrated library. It came with its symbol, footprint, and a 3D STEP model, so the part on the board matches the part I would buy.</p></li>
+              <li class="win"><h3>Schematic capture</h3><p>I connected the parts with power ports for +3V3 and ground and a header for the supply, then linked the schematic to a PCB document.</p></li>
+              <li><h3>Board layout <time>next</time></h3><p>Next I'll place the footprints, draw the board outline, route the traces, and run Altium's design-rule check.</p></li>
+            </ul>
+          </section>
+
+          <section id="eps">
+            <h2>Side exercise: a nanosatellite power system</h2>
+            <p>Separately, I'm working through a learning exercise on the electrical power system (EPS) of a nanosatellite: the chain that takes energy from the battery and turns it into the stable voltages the rest of the spacecraft needs. I'm building it up one stage at a time.</p>
+            <p>The first stage is regulation. It's a buck converter built around a <strong>TI TPSM63603</strong> power module, which steps the battery bus down to a 5 V rail. The module integrates the controller, switches, and inductor, accepts up to 36 V in, and delivers up to 3 A. I imported the manufacturer's symbol and footprint and drew the schematic: battery input connector, input decoupling, a feedback divider to set the output voltage, a frequency-setting resistor, and output capacitors.</p>
+            <figure>
+              <img src="../assets/img/pcb/power-schematic.jpg" alt="Altium schematic: a battery input connector feeding a TPSM63603 buck module with input and output capacitors, a feedback resistor divider, and a 5 V output" loading="lazy" data-zoom style="background:#fff;">
+              <figcaption>Regulation stage of the EPS exercise (work in progress).</figcaption>
+            </figure>
+          </section>
+
+          <section id="next">
+            <h2>What's next</h2>
+            <ol>
+              <li>Lay out and route the LED board, pass the design-rule check, and generate fabrication files.</li>
+              <li>Order the board, solder the 0805 parts by hand, and confirm the LED lights at the expected current.</li>
+              <li>Add the remaining stages of the EPS exercise and check the regulator against the datasheet's reference design.</li>
+            </ol>
+          </section>
+        </article>
+      </div>
+    </div>
+
+    <div class="container next">
+      <a href="glove-dispenser.html">
+        <div><p class="eyebrow">Back to the top project</p><h3>Touch-free glove and sanitiser dispenser</h3></div>
+        <span aria-hidden="true" style="font-size:1.6rem">→</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span data-year>2026</span> Justin Worachek</span>
+      <span>Plain HTML, CSS and JavaScript.</span>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
