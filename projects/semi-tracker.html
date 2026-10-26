@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Semi Tracker · Justin Worachek</title>
-  <meta name="description" content="Case study: Semi Tracker, a single-page semiconductor market dashboard built with plain JavaScript and a PowerShell data proxy.">
+  <meta name="description" content="Case study: Semi Tracker, a single-page semiconductor market dashboard built with plain JavaScript, a PowerShell data proxy, and a scheduled GitHub Action.">
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,7 +38,7 @@
           <div><dt>Type</dt><dd>Personal project</dd></div>
           <div><dt>Built</dt><dd>June 2026</dd></div>
           <div><dt>Team</dt><dd>Solo, AI-assisted</dd></div>
-          <div><dt>Stack</dt><dd>HTML · CSS · JavaScript · PowerShell · Yahoo Finance v8 API · GitHub Pages</dd></div>
+          <div><dt>Stack</dt><dd>HTML · CSS · JavaScript · PowerShell · Python · GitHub Actions · Yahoo Finance v8 API · GitHub Pages</dd></div>
         </dl>
         <div class="cs-links">
           <a class="btn" href="https://github.com/N-o-va/Finance/tree/Semiconductor-tracker" rel="noopener">
@@ -61,6 +61,7 @@
             <li><a href="#architecture">Architecture</a></li>
             <li><a href="#features">Features</a></li>
             <li><a href="#bug">The +165% bug</a></li>
+            <li><a href="#hosted-fix">Fixing the hosted build</a></li>
             <li><a href="#limits">Limitations</a></li>
             <li><a href="#next">Next steps</a></li>
           </ol>
@@ -80,11 +81,11 @@
             <div class="widget fsm static">
               <svg viewBox="0 0 730 260" role="img" aria-labelledby="arch-t arch-d">
                 <title id="arch-t">Semi Tracker data flow</title>
-                <desc id="arch-d">On localhost the browser calls a PowerShell proxy, serve.ps1, which handles authentication and fetches all 16 tickers in one batch from the Yahoo Finance v8 chart API. On GitHub Pages the browser calls the API through corsproxy.io with one request per ticker.</desc>
+                <desc id="arch-d">On localhost the browser calls a PowerShell proxy, serve.ps1, which handles authentication and fetches all 16 tickers in one batch from the Yahoo Finance v8 chart API. On GitHub Pages a scheduled GitHub Action fetches all 16 tickers every 5 minutes and publishes data.json, which the browser reads in a single request.</desc>
                 <defs><marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>
                 <g class="node hl"><rect x="10" y="95" width="170" height="70" rx="10"/><text x="95" y="124" text-anchor="middle">BROWSER</text><text x="95" y="145" text-anchor="middle" class="sub">index.html · IS_LOCAL?</text></g>
                 <g class="node"><rect x="280" y="18" width="190" height="70" rx="10"/><text x="375" y="47" text-anchor="middle">serve.ps1</text><text x="375" y="68" text-anchor="middle" class="sub">auth + 1 batch call</text></g>
-                <g class="node"><rect x="280" y="172" width="190" height="70" rx="10"/><text x="375" y="201" text-anchor="middle">corsproxy.io</text><text x="375" y="222" text-anchor="middle" class="sub">16 parallel calls</text></g>
+                <g class="node"><rect x="280" y="172" width="190" height="70" rx="10"/><text x="375" y="201" text-anchor="middle">GitHub Action</text><text x="375" y="222" text-anchor="middle" class="sub">writes data.json · 5 min</text></g>
                 <g class="node"><rect x="560" y="95" width="160" height="70" rx="10"/><text x="640" y="124" text-anchor="middle">YAHOO v8</text><text x="640" y="145" text-anchor="middle" class="sub">chart API</text></g>
                 <path class="edge" d="M180 115 C232 115 228 53 272 53" marker-end="url(#arr2)"/>
                 <path class="edge" d="M180 145 C232 145 228 207 272 207" marker-end="url(#arr2)"/>
@@ -96,8 +97,8 @@
             </div>
             <ul>
               <li><strong>Local:</strong> a small PowerShell <code>HttpListener</code> server (<code>serve.ps1</code>) serves the page, gets the cookie and crumb, and returns all 16 tickers from a single <code>/api/finance</code> request.</li>
-              <li><strong>Hosted:</strong> on GitHub Pages there's no server, so the page sends one request per ticker through a public CORS proxy.</li>
-              <li><strong>Refresh:</strong> on load the page fetches 3-month history for the sparklines, then a 1-day range for accurate daily change. During US market hours (9:30–16:00 ET) it refreshes every 60 seconds.</li>
+              <li><strong>Hosted:</strong> GitHub Pages has no server, so a scheduled GitHub Action does the fetching. Every 5 minutes during market hours it runs a small Python script (<code>fetch_data.py</code>) that pulls all 16 tickers and publishes the result as <code>data.json</code> on a separate branch. The page reads that one file from <code>raw.githubusercontent.com</code>.</li>
+              <li><strong>Refresh:</strong> the page uses 3-month history for the sparklines and a 1-day range for accurate daily change. During US market hours (9:30–16:00 ET) it refreshes every 60 seconds, and if a load fails it keeps retrying instead of giving up. Hosted prices run a few minutes behind because the snapshot only updates every 5 minutes.</li>
             </ul>
           </section>
 
@@ -137,11 +138,18 @@
             <p>With the fix in place, the local build was verified against real data: an average daily change of +1.54%, with 10 tickers up and 6 down.</p>
           </section>
 
+          <section id="hosted-fix">
+            <h2>Fixing the hosted build</h2>
+            <p>In October 2026 the hosted dashboard stopped showing real prices. The free CORS proxy it depended on had started dropping every connection, so all 16 requests failed and the page quietly fell back to simulated prices. Other free proxies failed too. A second bug made it worse: when the first load failed, the page never tried again.</p>
+            <p>The fix was to stop fetching from the browser at all. A scheduled GitHub Action now fetches the data on GitHub's servers and publishes a single JSON snapshot, which the page reads directly. That removed the third-party proxy entirely, at the cost of prices running a few minutes behind. The page also retries every 60 seconds now, so a bad first load no longer leaves it on simulated data.</p>
+            <div class="callout"><p>The lesson: a free service you don't control is a single point of failure. Owning the fetch step, even as a simple scheduled job, is more reliable than borrowing someone else's server.</p></div>
+          </section>
+
           <section id="limits">
             <h2>Known limitations</h2>
             <ul>
-              <li><strong>Unofficial data source.</strong> The Yahoo v8 endpoint is undocumented, can rate-limit, and isn't licensed for redistribution. It's fine for a personal tool, but not for a product.</li>
-              <li><strong>Third-party proxy.</strong> The hosted build depends on a free public CORS proxy, its most likely point of failure.</li>
+              <li><strong>Unofficial data source.</strong> The Yahoo v8 endpoint is undocumented, can rate-limit (including requests from GitHub's servers), and isn't licensed for redistribution. It's fine for a personal tool, but not for a product.</li>
+              <li><strong>Delayed hosted data.</strong> GitHub runs scheduled jobs on a best-effort basis, so hosted prices can lag 5–15 minutes. GitHub also pauses schedules in public repos after 60 days without activity.</li>
               <li><strong>Sample content.</strong> The news and outlook panels use placeholder content, not a live feed, and the offline fallback simulates prices when data can't be fetched.</li>
               <li><strong>Slow local start.</strong> Local loading takes 30–60 seconds because requests run one after another.</li>
             </ul>
@@ -150,7 +158,7 @@
           <section id="next">
             <h2>Next steps</h2>
             <ol>
-              <li>Replace the public proxy with a Cloudflare Worker I control.</li>
+              <li>Move the hosted fetch to a Cloudflare Worker if near-real-time prices become important.</li>
               <li>Run local fetches in parallel.</li>
               <li>Clearly label simulated data, or stop simulating when the live fetch fails.</li>
               <li>Swap the sample news panel for a real news API, or remove it.</li>
