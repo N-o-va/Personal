@@ -1,0 +1,39 @@
+/* ==========================================================================
+   Opening animation: logo in the centre, traces branch out from it, then the
+   logo glides into the header and the page appears.
+   ========================================================================== */
+
+:root { --copper: #b8692e; --copper-hot: #f0a560; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --copper: #c98545; --copper-hot: #ffc98a; }
+}
+:root[data-theme="dark"] { --copper: #c98545; --copper-hot: #ffc98a; }
+
+/* Hold the hero and the header logo until the intro hands over */
+.intro-c .hero .container > * { opacity: 0; }
+.intro-c .brand-mark { visibility: hidden; }
+
+.intro-c-reveal .hero .container > * { animation: introc-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.intro-c-reveal .hero .container > *:nth-child(2) { animation-delay: 0.06s; }
+.intro-c-reveal .hero .container > *:nth-child(3) { animation-delay: 0.12s; }
+.intro-c-reveal .hero .container > *:nth-child(4) { animation-delay: 0.18s; }
+.intro-c-reveal .hero .container > *:nth-child(5) { animation-delay: 0.24s; }
+@keyframes introc-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+.introc-overlay { position: fixed; inset: 0; z-index: 200; }
+.introc-overlay svg.stems { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.introc-overlay .trace { fill: none; stroke: var(--copper); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.introc-overlay .via { fill: var(--bg); stroke: var(--copper); stroke-width: 2; }
+.introc-overlay .pulse {
+  fill: none; stroke: var(--copper-hot); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round;
+  filter: drop-shadow(0 0 4px var(--copper-hot));
+}
+.introc-overlay .via { transform-box: fill-box; transform-origin: center; }
+.introc-logo { position: absolute; transform-origin: 0 0; will-change: transform; }
+.introc-logo svg { display: block; width: 100%; height: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-c .hero .container > * { opacity: 1; }
+  .intro-c .brand-mark { visibility: visible; }
+  .introc-overlay { display: none; }
+}

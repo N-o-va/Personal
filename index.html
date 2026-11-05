@@ -12,13 +12,27 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
-</head>
+  <link rel="stylesheet" href="assets/css/intro-center.css">
+  <script>(function(){var d=document.documentElement,rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches,seen=false;try{seen=sessionStorage.getItem("jw-intro")==="1"}catch(e){}if(rm||seen||location.hash)return;d.classList.add("intro-c");setTimeout(function(){d.classList.remove("intro-c")},4500)})();</script></head>
 <body>
   <a class="sr-only" href="#work">Skip to projects</a>
 
   <header class="site-header">
     <div class="container">
-      <a class="brand" href="index.html"><span class="brand-mark">JW</span>Justin Worachek</a>
+      <a class="brand" href="index.html"><span class="brand-mark brand-logo" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#16181d"/>
+  <g transform="translate(-1 2.5)">
+    <g fill="none" stroke="#c98545" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M24 15 V38 L18 44 H13"/>
+      <path d="M33 15 V39 L38 44 L43 39 V29"/>
+      <path d="M43 39 L48 44 L53 39 V15"/>
+    </g>
+    <g fill="#16181d" stroke="#c98545" stroke-width="2.4">
+      <circle cx="24" cy="15" r="3.2"/><circle cx="13" cy="44" r="3.2"/>
+      <circle cx="33" cy="15" r="3.2"/><circle cx="53" cy="15" r="3.2"/><circle cx="43" cy="29" r="3.2"/>
+    </g>
+  </g>
+</svg></span>Justin Worachek</a>
       <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
       </button>
@@ -265,6 +279,7 @@
     </div>
   </footer>
 
+  <script src="assets/js/intro-center.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>
