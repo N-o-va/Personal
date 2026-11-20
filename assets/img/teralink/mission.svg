@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-labelledby="t d">
+  <title id="t">TeraLink-1 mission illustration</title>
+  <desc id="d">A 6U CubeSat in low Earth orbit sends and receives a 225 GHz sub-terahertz link to a ground station dish at Northeastern.</desc>
+  <style>
+    .bg{fill:none}
+    .earth{fill:#e8effc;stroke:#c9d6ee;stroke-width:2}
+    .orbit{fill:none;stroke:#9aa0aa;stroke-width:1.5;stroke-dasharray:4 7}
+    .body{fill:#23262d;stroke:#16181d;stroke-width:2}
+    .panel{fill:#1d2f55;stroke:#16181d;stroke-width:2}
+    .cell{stroke:#3d5a92;stroke-width:1.2}
+    .cu{stroke:#b8692e}
+    .cuf{fill:#b8692e}
+    .beam{fill:none;stroke:#b8692e;stroke-width:2.5;stroke-linecap:round}
+    .beamfaint{fill:#b8692e;opacity:.12}
+    .ink{fill:#16181d}
+    .lbl{font:600 22px 'IBM Plex Mono',Consolas,monospace;fill:#16181d}
+    .sub{font:500 15px 'IBM Plex Mono',Consolas,monospace;fill:#7a808b;letter-spacing:.5px}
+    .dish{fill:#eef0f3;stroke:#4a4f59;stroke-width:2.5}
+    .mast{stroke:#4a4f59;stroke-width:4;stroke-linecap:round}
+    @media (prefers-color-scheme:dark){
+      .earth{fill:#1a2540;stroke:#2c3d63}
+      .orbit{stroke:#5a616d}
+      .body{fill:#2c313b;stroke:#0f1115}
+      .panel{fill:#22365f;stroke:#0f1115}
+      .cell{stroke:#4a6aa6}
+      .cu{stroke:#c98545}.cuf{fill:#c98545}
+      .beam{stroke:#c98545}.beamfaint{fill:#c98545}
+      .lbl{fill:#e8eaee}.sub{fill:#838a96}
+      .dish{fill:#2c313b;stroke:#b0b6c1}.mast{stroke:#b0b6c1}
+    }
+  </style>
+  <rect class="bg" width="800" height="500"/>
+
+  <!-- Earth limb and orbit -->
+  <ellipse class="earth" cx="400" cy="1180" rx="980" ry="760"/>
+  <path class="orbit" d="M-40 300 Q400 40 840 300"/>
+
+  <!-- Link beam -->
+  <path class="beamfaint" d="M566 222 L578 230 L198 392 L176 366 Z"/>
+  <path class="beam" d="M570 226 L186 374" stroke-dasharray="14 10"/>
+  <path class="beam" d="M576 230 L194 386" stroke-dasharray="14 10" opacity=".55"/>
+
+  <!-- 6U CubeSat with deployed panels -->
+  <g transform="translate(590 170) rotate(18)">
+    <rect class="panel" x="-150" y="-34" width="104" height="68" rx="3"/>
+    <rect class="panel" x="46" y="-34" width="104" height="68" rx="3"/>
+    <g class="cell">
+      <path d="M-124 -34 V34 M-98 -34 V34 M-72 -34 V34 M-150 0 H-46"/>
+      <path d="M72 -34 V34 M98 -34 V34 M124 -34 V34 M46 0 H150"/>
+    </g>
+    <path class="cu" d="M-46 0 H-34 M34 0 H46" stroke-width="3"/>
+    <rect class="body" x="-34" y="-52" width="68" height="104" rx="4"/>
+    <path d="M-34 -17 H34 M-34 18 H34 M0 -52 V52" stroke="#3a3f4a" stroke-width="1.5"/>
+    <circle class="cuf" cx="0" cy="58" r="7"/>
+  </g>
+
+  <!-- Ground station dish -->
+  <g transform="translate(170 392)">
+    <path class="mast" d="M8 4 L-6 52 M8 4 L24 52 M-14 52 H32"/>
+    <path class="dish" d="M-46 -18 Q4 52 62 -6 Z" transform="rotate(-24)"/>
+    <circle class="cuf" cx="18" cy="-14" r="5"/>
+  </g>
+
+  <!-- Labels -->
+  <text x="610" y="300" class="lbl">TeraLink-1</text>
+  <text x="610" y="324" class="sub">6U CUBESAT · LEO</text>
+  <text x="300" y="282" class="lbl" transform="rotate(-21 300 282)">225 GHz</text>
+  <text x="250" y="468" class="lbl">Sub-THz ground station</text>
+  <text x="250" y="490" class="sub">2 M DISH · NORTHEASTERN</text>
+</svg>

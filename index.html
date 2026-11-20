@@ -59,7 +59,7 @@
         <dl class="hero-facts">
           <div><dt>Studying</dt><dd>EECE (Electrical and Computer Engineering) · Northeastern University</dd></div>
           <div><dt>Based</dt><dd>Boston, MA</dd></div>
-          <div><dt>Focus</dt><dd>Embedded systems · CAD · Prototyping</dd></div>
+          <div><dt>Focus</dt><dd>Space hardware · PCB design · Embedded</dd></div>
         </dl>
       </div>
     </section>
@@ -76,8 +76,29 @@
         </div>
 
         <div style="display:grid; gap:20px;">
-          <a class="featured" href="projects/glove-dispenser.html">
+          <a class="featured" href="projects/teralink-1.html">
             <div class="featured-media">
+              <img src="assets/img/teralink/mission.svg" alt="Illustration: the TeraLink-1 CubeSat linked at 225 GHz to a sub-terahertz ground station dish" loading="lazy" style="object-fit:contain; object-position:center bottom;">
+            </div>
+            <div class="featured-body">
+              <p class="card-meta"><span class="badge ok"><span class="dot"></span>Current</span> · Northeastern Satellite Lab</p>
+              <h3>TeraLink-1: powering a terahertz CubeSat</h3>
+              <p>Hardware Deputy at the Northeastern Satellite Lab and EPS Deputy for TeraLink-1, a 6U CubeSat built to demonstrate the first sub-terahertz space-to-ground link. Stepping up to Hardware Lead and EPS Lead in January 2027.</p>
+              <div class="featured-stats">
+                <div><strong>6U</strong><span>CubeSat</span></div>
+                <div><strong>225 GHz</strong><span>space-to-ground link</span></div>
+                <div><strong>CDR</strong><span>November 2026</span></div>
+              </div>
+              <ul class="chips" aria-label="Areas">
+                <li><span class="chip">Spacecraft EPS</span></li>
+                <li><span class="chip">Satellite hardware</span></li>
+                <li><span class="chip">AFRL UNP</span></li>
+              </ul>
+              <span class="link-arrow">Read more →</span>
+            </div>
+          </a>
+
+          <a class="featured" href="projects/glove-dispenser.html">            <div class="featured-media">
               <img src="assets/img/glove/cover.jpg" alt="Finished glove and sanitiser dispenser prototype: clear acrylic housing holding a glove box, red 3D-printed sanitiser unit, and a white electronics enclosure on top" loading="lazy">
             </div>
             <div class="featured-body">
@@ -165,12 +186,12 @@
           </a>
 
           <a class="card building" href="projects/pcb-design.html">
-            <div class="card-media"><img src="assets/img/pcb/led-schematic.jpg" alt="Altium schematic of an LED board: 3.3 V through a 360 ohm resistor to a green LED" loading="lazy" style="object-fit:contain; background:#fff;"></div>
+            <div class="card-media"><img src="assets/img/pcb/mini-eps-schematic.png" alt="Altium schematic of the Mini-EPS CubeSat power board" loading="lazy" style="object-fit:contain; background:#fff;"></div>
             <div class="card-body">
               <p class="card-meta"><span class="badge warn"><span class="dot"></span>In progress</span> · Fall 2026</p>
-              <h3>First custom PCB</h3>
-              <p>Learning Altium Designer by building an LED board end to end: custom symbol and footprint libraries, a real manufacturer part with its 3D model, and schematic capture. Layout is next.</p>
-              <ul class="chips"><li><span class="chip">Altium Designer</span></li><li><span class="chip">Schematic capture</span></li><li><span class="chip">Footprint libraries</span></li></ul>
+              <h3>Altium experience</h3>
+              <p>A miniature CubeSat power board designed in the Satellite Lab's weekly Altium lessons: buck and LDO regulation, an STM32 microcontroller, CAN, and subsystem LEDs. Schematic done, layout under way.</p>
+              <ul class="chips"><li><span class="chip">Altium Designer</span></li><li><span class="chip">Schematic capture</span></li><li><span class="chip">Power electronics</span></li></ul>
             </div>
           </a>
         </div>
@@ -192,7 +213,7 @@
           <li><time>Jan–Apr 2026</time><strong>Glove dispenser</strong><span>CAD, fabrication, integration</span></li>
           <li><time>Spring 2026</time><strong>Wi-Fi logger · Nexus</strong><span>Networking, APIs, product</span></li>
           <li><time>Summer 2026</time><strong>Semi Tracker</strong><span>Data, web, visualisation</span></li>
-          <li class="future"><time>Fall 2026</time><strong>Custom PCB</strong><span>Board design in Altium</span></li>
+          <li><time>Fall 2026</time><strong>Satellite Lab · Altium</strong><span>TeraLink-1 EPS, PCB design</span></li>
         </ol>
       </div>
     </section>
@@ -215,7 +236,7 @@
               <li><span class="chip">MicroPython</span></li><li><span class="chip">Raspberry Pi Pico / Pico W</span></li>
               <li><span class="chip">PWM</span></li><li><span class="chip">H-bridge (L298N)</span></li>
               <li><span class="chip">Ultrasonic + IR sensing</span></li><li><span class="chip">Servos</span></li>
-              <li><span class="chip">I²C LCD</span></li><li><span class="chip">Altium Designer (learning)</span></li>
+              <li><span class="chip">I²C LCD</span></li><li><span class="chip">Altium Designer</span></li><li><span class="chip">CubeSat EPS</span></li>
             </ul>
           </div>
           <div class="skill-group">
@@ -258,7 +279,7 @@
           <h2>Hi, I'm Justin.</h2>
           <!-- TODO(Justin): this is a factual first draft. Rewrite it in your own voice: what you enjoy, what you're looking for (co-op, internship), and where you're headed after London. -->
           <p class="muted">I spent my first year of engineering at Northeastern's London campus. The Cornerstone courses there put me in the makerspace early: a maze-solving robot in the first semester and a medical-device prototype in the second, with web and IoT projects on the side.</p>
-          <p class="muted">Most of my work sits where hardware meets software: motor control, sensors, and the code that ties them together. Right now I'm designing my first PCB in Altium Designer.</p>
+          <p class="muted">Most of my work sits where hardware meets software: motor control, sensors, and the code that ties them together. Right now I'm Hardware Deputy at the Northeastern Satellite Lab and EPS Deputy for the TeraLink-1 CubeSat, designing boards in Altium Designer.</p>
         </div>
         <div id="contact">
           <p class="eyebrow">Contact</p>

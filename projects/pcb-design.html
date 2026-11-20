@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PCB Design · Justin Worachek</title>
-  <meta name="description" content="In progress: learning PCB design in Altium Designer, starting with an LED board built from a tutorial, plus a nanosatellite power-system learning exercise.">
+  <title>Altium Experience · Justin Worachek</title>
+  <meta name="description" content="Altium Designer experience: a miniature CubeSat power board (Mini-EPS) designed in the Northeastern Satellite Lab's weekly hardware lessons, plus an LED practice board.">
   <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,73 +44,106 @@
     <div class="container">
       <section class="cs-hero">
         <a class="back" href="../index.html#work">← All projects</a>
-        <p class="eyebrow">In progress · Fall 2026 · <span class="badge warn"><span class="dot"></span>Schematic done, layout next</span></p>
-        <h1>Learning PCB design in Altium Designer</h1>
-        <p class="lede">My first printed circuit board: a small LED board built by following a tutorial, chosen so I could learn the whole Altium workflow on a circuit simple enough to get right. Alongside it, I'm working through a learning exercise on the power system of a nanosatellite.</p>
+        <p class="eyebrow">Altium Designer · Fall 2026 – present · <span class="badge warn"><span class="dot"></span>Layout in progress</span></p>
+        <h1>Altium experience</h1>
+        <p class="lede">I'm learning professional PCB design in Altium Designer through the Northeastern Satellite Lab's weekly hardware lessons, where the lab's hardware lead walks the team through designing a miniature CubeSat power board. Alongside it, I built a small LED board on my own to practise the workflow.</p>
         <dl class="cs-meta">
           <div><dt>Tool</dt><dd>Altium Designer</dd></div>
-          <div><dt>Started</dt><dd>October 2026</dd></div>
-          <div><dt>First board</dt><dd>3.3 V LED indicator</dd></div>
-          <div><dt>Status</dt><dd>Schematic and libraries complete</dd></div>
+          <div><dt>Main board</dt><dd>Mini-EPS (CubeSat power board)</dd></div>
+          <div><dt>Key parts</dt><dd>TI TPSM63603 buck module · STM32C562 MCU · CAN transceiver</dd></div>
+          <div><dt>Status</dt><dd>Schematic complete · PCB layout started</dd></div>
         </dl>
       </section>
+
+      <figure class="cs-cover">
+        <img src="../assets/img/pcb/mini-eps-schematic.png" alt="Full Altium schematic of the Mini-EPS board with four blocks: power, microcontroller and SWD debug, CAN transceiver and test points, and subsystem LEDs" data-zoom style="background:#fff;">
+        <figcaption>My Mini-EPS schematic in Altium Designer, 19 November 2026. Click to enlarge.</figcaption>
+      </figure>
 
       <div class="cs-layout">
         <nav class="toc" aria-label="On this page">
           <p>On this page</p>
           <ol>
-            <li><a href="#why">Why PCBs</a></li>
-            <li><a href="#led-board">The LED board</a></li>
-            <li><a href="#workflow">What I learned</a></li>
-            <li><a href="#eps">Nanosatellite EPS</a></li>
+            <li><a href="#mini-eps">The Mini-EPS board</a></li>
+            <li><a href="#blocks">Block by block</a></li>
+            <li><a href="#progress">How it came together</a></li>
+            <li><a href="#skills">Altium skills</a></li>
+            <li><a href="#led-board">Practice board: LED</a></li>
             <li><a href="#next">What's next</a></li>
           </ol>
         </nav>
 
         <article class="prose">
-          <section id="why">
-            <h2>Why PCBs</h2>
-            <p>Every project on this site so far ran on breadboards and jumper wires. Designing my own boards is the next step toward hardware that's compact and reliable. It also follows on from a Cornerstone research summary I co-wrote on automated PCB manufacturing and testing.</p>
-            <p>I first set up a project in KiCad, then moved to Altium Designer, an industry-standard tool for professional board design.</p>
+          <section id="mini-eps">
+            <h2>The Mini-EPS board</h2>
+            <p>An EPS (electrical power system) takes raw power, regulates it, and hands it out to the rest of a satellite. The Mini-EPS is a scaled-down version of one, used in the lab's weekly hardware sessions as a teaching board. Each week the hardware lead covers a new part of the design, and I build it out in my own Altium project.</p>
+            <p>It's directly relevant to my role as EPS Deputy on <a href="teralink-1.html">TeraLink-1</a>, where the real spacecraft uses a full-size version of the same ideas: regulated rails, a microcontroller managing power, and a data bus to the flight computer.</p>
           </section>
 
-          <section id="led-board">
-            <h2>The LED board</h2>
-            <p>The circuit is deliberately simple: a 3.3 V supply feeds a 360 Ω current-limiting resistor and a green LED to ground, with a two-pin header to bring power onto the board. The resistor keeps the LED current to a few milliamps, well within its rating.</p>
-            <figure style="max-width:340px;">
-              <img src="../assets/img/pcb/led-schematic.jpg" alt="Altium schematic: +3V3 through a 360 ohm resistor to a green LED and ground, with a 1x2 header" data-zoom style="background:#fff;">
-              <figcaption>The LED board schematic in Altium Designer.</figcaption>
-            </figure>
-            <p>Because the circuit is trivial, all the effort went into learning how a real board gets made, step by step.</p>
+          <section id="blocks">
+            <h2>Block by block</h2>
+            <p>The schematic is organised into four functional blocks:</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Block</th><th>What it does</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Power</strong></td><td>12 V input with a 16 V zener for overvoltage protection, a TI TPSM63603 buck module stepping 12 V down to 5 V, and an LDO regulating 5 V down to 3.3 V.</td></tr>
+                  <tr><td><strong>Microcontroller and debug</strong></td><td>An STM32C562 microcontroller with decoupling, reset, and SWD programming and debug headers.</td></tr>
+                  <tr><td><strong>CAN and test points</strong></td><td>A CAN transceiver so the board can talk to the rest of the satellite, plus test points on each rail for probing with a multimeter or scope.</td></tr>
+                  <tr><td><strong>Subsystem LEDs</strong></td><td>MOSFET-switched status LEDs, one per spacecraft subsystem (ADCS, payload, OBC, thermal and more), driven by the microcontroller.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="gallery">
+              <figure><img src="../assets/img/pcb/mini-eps-power.png" alt="Power block: input connector, buck converter from 12 V to 5 V, and LDO from 5 V to 3.3 V" loading="lazy" style="object-fit:contain; background:#fff;"><figcaption>Power block.</figcaption></figure>
+              <figure><img src="../assets/img/pcb/mini-eps-mcu.png" alt="STM32C562 microcontroller with SWD debug headers" loading="lazy" style="object-fit:contain; background:#fff;"><figcaption>Microcontroller and SWD debug.</figcaption></figure>
+              <figure><img src="../assets/img/pcb/mini-eps-can.png" alt="CAN transceiver and test points" loading="lazy" style="object-fit:contain; background:#fff;"><figcaption>CAN transceiver and test points.</figcaption></figure>
+              <figure><img src="../assets/img/pcb/mini-eps-leds.png" alt="MOSFET-switched subsystem status LEDs" loading="lazy" style="object-fit:contain; background:#fff;"><figcaption>Subsystem status LEDs.</figcaption></figure>
+            </div>
           </section>
 
-          <section id="workflow">
-            <h2>What I learned building it</h2>
+          <section id="progress">
+            <h2>How it came together</h2>
             <ul class="steps">
-              <li class="win"><h3>Custom schematic library</h3><p>I drew my own LED schematic symbol and stored it in a project schematic library, instead of relying only on built-in parts.</p></li>
-              <li class="win"><h3>Custom footprint library</h3><p>I built a PCB footprint library, including an 0805 surface-mount footprint, which defines the copper pads the part solders to.</p></li>
-              <li class="win"><h3>Importing a real manufacturer part</h3><p>For the resistor I imported an actual orderable part, a Yageo AC0805FR-07360RL (360 Ω, 1%, 0805), from SnapEDA as an integrated library. It came with its symbol, footprint, and a 3D STEP model, so the part on the board matches the part I would buy.</p></li>
-              <li class="win"><h3>Schematic capture</h3><p>I connected the parts with power ports for +3V3 and ground and a header for the supply, then linked the schematic to a PCB document.</p></li>
-              <li><h3>Board layout <time>next</time></h3><p>Next I'll place the footprints, draw the board outline, route the traces, and run Altium's design-rule check.</p></li>
+              <li class="win"><h3>Imported the power module <time>13 Oct</time></h3><p>Brought in the manufacturer's symbol and footprint for the TI TPSM63603 and packaged them into an integrated library.</p></li>
+              <li class="win"><h3>First power schematic <time>20 Oct</time></h3><p>Captured the buck regulator stage on its own: input, feedback divider, frequency-setting resistor and output capacitors.</p></li>
+              <li class="win"><h3>Added the microcontroller <time>5 Nov</time></h3><p>Imported the STM32C562 symbol, footprint and 3D model, and pulled the manufacturer's IBIS and BSDL models for it.</p></li>
+              <li class="win"><h3>Full schematic <time>19 Nov</time></h3><p>All four blocks connected: power, microcontroller and debug, CAN and test points, and subsystem LEDs.</p></li>
+              <li><h3>PCB layout <time>started 19 Nov</time></h3><p>The board layout is now under way.</p></li>
+            </ul>
+            <figure>
+              <img src="../assets/img/pcb/power-schematic.jpg" alt="Earlier version: a single buck regulator stage around the TPSM63603" loading="lazy" data-zoom style="background:#fff;">
+              <figcaption>Where it started (20 Oct): just the regulator stage.</figcaption>
+            </figure>
+          </section>
+
+          <section id="skills">
+            <h2>Altium skills so far</h2>
+            <ul>
+              <li>Schematic capture organised into functional blocks, with net labels and power ports</li>
+              <li>Multi-part components (the power module and microcontroller each split across several symbol parts)</li>
+              <li>Importing manufacturer parts with symbols, footprints and 3D STEP models</li>
+              <li>Building my own schematic and footprint libraries, and integrated libraries</li>
+              <li>Designing for test and debug: test points, SWD headers, status LEDs</li>
+              <li>Starting PCB layout from the finished schematic</li>
             </ul>
           </section>
 
-          <section id="eps">
-            <h2>Side exercise: a nanosatellite power system</h2>
-            <p>Separately, I'm working through a learning exercise on the electrical power system (EPS) of a nanosatellite: the chain that takes energy from the battery and turns it into the stable voltages the rest of the spacecraft needs. I'm building it up one stage at a time.</p>
-            <p>The first stage is regulation. It's a buck converter built around a <strong>TI TPSM63603</strong> power module, which steps the battery bus down to a 5 V rail. The module integrates the controller, switches, and inductor, accepts up to 36 V in, and delivers up to 3 A. I imported the manufacturer's symbol and footprint and drew the schematic: battery input connector, input decoupling, a feedback divider to set the output voltage, a frequency-setting resistor, and output capacitors.</p>
-            <figure>
-              <img src="../assets/img/pcb/power-schematic.jpg" alt="Altium schematic: a battery input connector feeding a TPSM63603 buck module with input and output capacitors, a feedback resistor divider, and a 5 V output" loading="lazy" data-zoom style="background:#fff;">
-              <figcaption>Regulation stage of the EPS exercise (work in progress).</figcaption>
+          <section id="led-board">
+            <h2>Practice board: LED</h2>
+            <p>On my own, to practise the basic Altium workflow, I followed a tutorial to build a tiny board: a 3.3 V supply through a 360 Ω current-limiting resistor to a green LED, with a two-pin header. I drew my own LED symbol, built an 0805 footprint library, and imported a real Yageo resistor from SnapEDA with its 3D model.</p>
+            <figure style="max-width:340px;">
+              <img src="../assets/img/pcb/led-schematic.jpg" alt="Altium schematic: +3V3 through a 360 ohm resistor to a green LED and ground, with a 1x2 header" loading="lazy" data-zoom style="background:#fff;">
+              <figcaption>The LED practice board schematic.</figcaption>
             </figure>
           </section>
 
           <section id="next">
             <h2>What's next</h2>
             <ol>
-              <li>Lay out and route the LED board, pass the design-rule check, and generate fabrication files.</li>
-              <li>Order the board, solder the 0805 parts by hand, and confirm the LED lights at the expected current.</li>
-              <li>Add the remaining stages of the EPS exercise and check the regulator against the datasheet's reference design.</li>
+              <li>Finish placing and routing the Mini-EPS board and pass Altium's design-rule check.</li>
+              <li>Generate fabrication files and, if the lab orders boards, assemble and bring one up on the bench.</li>
+              <li>Take these skills into the lab's real hardware as Hardware Lead and EPS Lead from January 2027.</li>
             </ol>
           </section>
         </article>
@@ -118,13 +151,12 @@
     </div>
 
     <div class="container next">
-      <a href="glove-dispenser.html">
-        <div><p class="eyebrow">Back to the top project</p><h3>Touch-free glove and sanitiser dispenser</h3></div>
+      <a href="teralink-1.html">
+        <div><p class="eyebrow">Next project</p><h3>TeraLink-1: powering a terahertz CubeSat</h3></div>
         <span aria-hidden="true" style="font-size:1.6rem">→</span>
       </a>
     </div>
   </main>
-
   <footer class="site-footer">
     <div class="container">
       <span>© <span data-year>2026</span> Justin Worachek</span>
